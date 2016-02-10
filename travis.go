@@ -75,7 +75,6 @@ func NewClient(baseUrl string, travisToken string) *Client {
 	bu, _ := url.Parse(baseUrl)
 	bh := map[string]string{
 		"Content-Type": TRAVIS_REQUEST_CONTENT_TYPE,
-		"User-Agent":   TRAVIS_USER_AGENT,
 		"Accept":       TRAVIS_REQUEST_ACCEPT_HEADER,
 		"Host":         bu.Host,
 	}
@@ -138,6 +137,8 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}, headers map
 	if err != nil {
 		return nil, err
 	}
+
+	req.Header.Set("User-Agent", c.UserAgent)
 
 	var h map[string]string = c.Headers
 	if headers != nil {
