@@ -40,7 +40,7 @@ const (
 // A Client manages communication with the Travis CI API.
 type Client struct {
 	// HTTP client used to communicate with the API
-	BaseHTTP *http.Client
+	HTTPClient *http.Client
 
 	// Headers to attach to every requests made with the client.
 	// As a default, Headers will be used to provide Travis API authentication
@@ -80,10 +80,10 @@ func NewClient(baseUrl string, travisToken string) *Client {
 	}
 
 	c := &Client{
-		BaseHTTP:  http.DefaultClient,
-		Headers:   bh,
-		BaseURL:   bu,
-		UserAgent: TRAVIS_USER_AGENT,
+		HTTPClient: http.DefaultClient,
+		Headers:    bh,
+		BaseURL:    bu,
+		UserAgent:  TRAVIS_USER_AGENT,
 	}
 
 	c.Authentication = &AuthenticationService{client: c}
@@ -160,7 +160,7 @@ func (c *Client) NewRequest(method, urlStr string, body interface{}, headers map
 // interface, the raw response body will be written to v, without attempting to
 // first decode it.
 func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
-	resp, err := c.BaseHTTP.Do(req)
+	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
