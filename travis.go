@@ -80,10 +80,14 @@ func NewClient(baseUrl string, travisToken string) *Client {
 	}
 
 	c := &Client{
-		HTTPClient: http.DefaultClient,
-		Headers:    bh,
-		BaseURL:    bu,
-		UserAgent:  TRAVIS_USER_AGENT,
+		HTTPClient: &http.Client{
+			CheckRedirect: func(req *http.Request, via []*http.Request) error {
+				return http.ErrUseLastResponse
+			},
+		},
+		Headers:   bh,
+		BaseURL:   bu,
+		UserAgent: TRAVIS_USER_AGENT,
 	}
 
 	c.Authentication = &AuthenticationService{client: c}
